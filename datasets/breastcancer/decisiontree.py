@@ -11,6 +11,8 @@ Created on Nov 16, 2014
 '''
 
 from sklearn import tree 
+from sklearn.externals.six import StringIO  
+import pydot
 
 inputdataset = "breast-cancer-wisconsin.data"
 
@@ -53,10 +55,17 @@ def calaccuracy(inFile):
         if(l1[i].split(",")[-1] != l2[i].split(",")[-1]):
             count += 1
     print("accuracy:" + str((len(l1)-count)*100.00/len(l1)))  
+
+def plottree(clf):
+    dot_data = StringIO() 
+    tree.export_graphviz(clf, out_file=dot_data) 
+    graph = pydot.graph_from_dot_data(dot_data.getvalue()) 
+    graph.write_png("decisiontree.png")     
                                  
 def main(inFile):
     trainingdata,classlabels = gettrainingdata(inFile)
     clf = applydecisiontree(trainingdata,classlabels)
+    plottree(clf)
     predictonmodel(clf,inFile)
     calaccuracy(inFile)
     
