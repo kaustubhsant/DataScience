@@ -6,7 +6,8 @@ Created on Nov 16, 2014
 @summary: Uses decision tree to learn and predict class label on the breast-cancer data
           taken from UCI repository (https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29)
           Training dataset: 16% of complete data
-          Prediction accuracy: 96.42%
+          Missing values: substituted with middle value of range of values for attribute
+          Prediction accuracy: 96.28%
 '''
 
 from sklearn import tree 
@@ -37,7 +38,7 @@ def predictonmodel(clf,InFile):
             for lines in fin:
                 line = lines.strip().split(",")[:-1]
                 if("?" in line):
-                    line[line.index("?")] = "0"
+                    line[line.index("?")] = "5" 
                 for item in line:
                     fout.write(str(item).strip("'") + ",")
                 fout.write(str(clf.predict([line])[0]) + "\n")
