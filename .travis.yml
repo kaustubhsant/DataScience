@@ -1,6 +1,5 @@
 language: python
 python:
   - "2.7"
-install: 
-  -"pip install -U scikit-learn pydot"
+install: "pip install -U scikit-learn pydot"
 script: nosetests
