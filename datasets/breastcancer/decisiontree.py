@@ -35,27 +35,23 @@ def applydecisiontree(data,labels):
     return clf
 
 def predictonmodel(clf,InFile):
+    count=0
+    totallines=0
     with open("result.csv",'w') as fout:
         with open(InFile,'r') as fin:
             for lines in fin:
+                totallines += 1
                 line = lines.strip().split(",")[:-1]
                 if("?" in line):
                     line[line.index("?")] = "5" 
                 for item in line:
                     fout.write(str(item).strip("'") + ",")
                 fout.write(str(clf.predict([line])[0]) + "\n")
-
-def calaccuracy(inFile):
-    count=0
-    with open(inFile,'r') as fin:
-        l1=fin.readlines()                
-    with open("result.csv",'r') as fin:
-        l2=fin.readlines()
-    for i in range(len(l1)):
-        if(l1[i].split(",")[-1] != l2[i].split(",")[-1]):
-            count += 1
-    print("accuracy:" + str((len(l1)-count)*100.00/len(l1)))  
-
+                if(clf.score([line],[lines.strip().split(",")[-1]]) == 1.0 ):
+                    count += 1
+                    
+    print("accuracy:" + str(count*100.00/totallines))
+    
 def plottree(clf):
     dot_data = StringIO() 
     tree.export_graphviz(clf, out_file=dot_data) 
@@ -67,7 +63,6 @@ def main(inFile):
     clf = applydecisiontree(trainingdata,classlabels)
     plottree(clf)
     predictonmodel(clf,inFile)
-    calaccuracy(inFile)
     
 if __name__ == '__main__':
     main(inputdataset)
